@@ -1,0 +1,27 @@
+{
+  "name": "comunivesp-api",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/fabiolima-dev/comunivesp-api#readme",
+  "bugs": {
+    "url": "https://github.com/fabiolima-dev/comunivesp-api/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fabiolima-dev/comunivesp-api.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "nodemailer": "^6.10.0",
+    "pg": "^8.14.1"
+  }
+}
