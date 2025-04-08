@@ -1,4 +1,5 @@
 const emailServices = require("../services/emailServices");
+const { criarUsuario } = require("../services/usuarioServices");
 
 exports.requestRegistration = async (req, res) => {
   const { email } = req.body;
@@ -14,7 +15,7 @@ exports.requestRegistration = async (req, res) => {
   }
 
   try {
-    await emailServices.enviarEmail(email);
+    await criarUsuario(email);
     res
       .status(200)
       .json({ message: "Link de autenticação enviado com sucesso." });
