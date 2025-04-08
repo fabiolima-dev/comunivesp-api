@@ -1,18 +1,17 @@
 const nodemailer = require("nodemailer");
-const crypto = require("crypto");
 require("dotenv").config({ path: "../../.env" });
 
-exports.verificarDominioUnivesp = (email) => {
+function verificarDominioUnivesp(email) {
   const dominio = email.split("@")[1];
   return dominio === "univesp.br" || "aluno.univesp.br";
-};
+}
 
-exports.validarFormatoEmail = (email) => {
+function validarFormatoEmail(email) {
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return regex.test(email);
-};
+}
 
-exports.enviarEmail = (email) => {
+async function enviarEmail(email, token) {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -21,20 +20,25 @@ exports.enviarEmail = (email) => {
     },
   });
 
+  const link = `http://localhost:3000/verificar-email?token=${token}`;
+
   const mailOptions = {
-    from: EMAIL_PASSWORD,
+    from: `Comunivesp ${process.env.EMAIL_USER}`,
     to: email,
-    subject: "assunto",
-    text: "corpo",
-    html: "<p>corpo do email em html</p>",
+    subject: "Verifique seu e-mail",
+    html: `
+      <h2>Confirme seu e-mail</h2>
+      <p>Clique no link abaixo para verificar seu e-mail:</p>
+      <a href="${link}">${link}</a>`,
   };
 
-  const token = crypto.randomBytes(32).toString("hex");
-
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      return console.log("Erro ao enviar o e-mail: ", error);
-    }
+  try {
+    const info = await transporter.sendMail(mailOptions);
     console.log("E-mail enviado:", info.response);
-  });
-};
+  } catch (error) {
+    console.error("Erro ao enviar o e-mail:", error);
+    throw new Error("Falha ao enviar e-mail de verificação.");
+  }
+}
+
+module.exports = { enviarEmail, validarFormatoEmail, verificarDominioUnivesp };
