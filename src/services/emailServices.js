@@ -20,7 +20,7 @@ async function enviarEmail(email, token) {
     },
   });
 
-  const link = `http://localhost:3000/verificar-email?token=${token}`;
+  const link = `http://localhost:3000/auth/verificar-email?token=${token}`;
 
   const mailOptions = {
     from: `Comunivesp ${process.env.EMAIL_USER}`,
