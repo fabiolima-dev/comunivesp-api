@@ -1,9 +1,8 @@
 const nodemailer = require("nodemailer");
-require("dotenv").config({ path: "../../.env" });
 
 function verificarDominioUnivesp(email) {
   const dominio = email.split("@")[1];
-  return dominio === "univesp.br" || "aluno.univesp.br";
+  return dominio === "univesp.br" || dominio === "aluno.univesp.br";
 }
 
 function validarFormatoEmail(email) {
@@ -20,7 +19,7 @@ async function enviarEmail(email, token) {
     },
   });
 
-  const link = `http://localhost:3000/auth/verificar-email?token=${token}`;
+  const link = `${process.env.BASE_URL}/auth/verificar-email?token=${token}`;
 
   const mailOptions = {
     from: `Comunivesp ${process.env.EMAIL_USER}`,

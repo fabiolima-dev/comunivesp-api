@@ -11,14 +11,12 @@ const {
 const prisma = new PrismaClient();
 
 async function criarUsuario(email) {
-  if (!verificarDominioUnivesp(email)) {
-    return res.status(400).json({ message: "Formato de e-mail inválido." });
+  if (!validarFormatoEmail(email)) {
+    throw new Error("Formato de e-mail inválido.");
   }
 
-  if (!validarFormatoEmail(email)) {
-    return res
-      .status(400)
-      .json({ message: "E-mail não pertence ao domínio da UNIVESP." });
+  if (!verificarDominioUnivesp(email)) {
+    throw new Error("E-mail não pertence ao domínio da UNIVESP.");
   }
 
   const usuarioExistente = await prisma.usuarios.findUnique({
@@ -32,17 +30,15 @@ async function criarUsuario(email) {
   const token = crypto.randomBytes(32).toString("hex");
   const expiraEm = addHours(new Date(), 1);
 
-  const novoUsuario = await prisma.usuarios.create({
+  await enviarEmail(email, token);
+
+  await prisma.usuarios.create({
     data: {
       email,
       email_verificacao_token: token,
       email_verificacao_token_expira_em: expiraEm,
     },
   });
-
-  await enviarEmail(email, token);
-
-  return novoUsuario;
 }
 
 async function verificarEmailToken(token) {
@@ -55,21 +51,18 @@ async function verificarEmailToken(token) {
   }
 
   const agora = new Date();
-
   if (usuario.email_verificacao_token_expira_em < agora) {
     throw new Error("Token expirado");
   }
 
-  const usuarioAtualizado = await prisma.usuarios.update({
+  return (usuarioAtualizado = await prisma.usuarios.update({
     where: { id: usuario.id },
     data: {
       email_verificado: true,
       email_verificacao_token: null,
       email_verificacao_token_expira_em: null,
     },
-  });
-
-  return usuarioAtualizado;
+  }));
 }
 
 async function completarCadastro({ usuarioId, nome, senha }) {
@@ -87,15 +80,13 @@ async function completarCadastro({ usuarioId, nome, senha }) {
 
   const senhaHash = await bcrypt.hash(senha, 10);
 
-  const atualizado = await prisma.usuarios.update({
+  return await prisma.usuarios.update({
     where: { id: usuarioId },
     data: {
       nome,
       senha: senhaHash,
     },
   });
-
-  return atualizado;
 }
 
 async function buscarPorEmail(email) {
