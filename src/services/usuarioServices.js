@@ -99,10 +99,23 @@ async function validarSenha(senhaEnviada, senhaHash) {
   return await bcrypt.compare(senhaEnviada, senhaHash);
 }
 
+async function buscarUsuario(id) {
+  return await prisma.usuarios.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      nome: true,
+      email: true,
+      criado_em: true,
+    },
+  });
+}
+
 module.exports = {
   criarUsuario,
   verificarEmailToken,
   completarCadastro,
   buscarPorEmail,
   validarSenha,
+  buscarUsuario,
 };
