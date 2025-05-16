@@ -14,9 +14,13 @@
   "author": "",
   "type": "commonjs",
   "main": "index.js",
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node --watch src/app.js"
+    "dev": "node --watch src/app.js",
+    "seed": "prisma db seed"
   },
   "dependencies": {
     "@prisma/client": "^6.5.0",

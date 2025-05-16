@@ -1,14 +1,12 @@
-const { PrismaClient } = require("@prisma/client");
 const { addHours } = require("date-fns");
 const crypto = require("crypto");
 const bcrypt = require("bcryptjs");
+const prisma = require("../lib/prisma");
 const {
   validarFormatoEmail,
   verificarDominioUnivesp,
   enviarEmail,
 } = require("../services/emailServices");
-
-const prisma = new PrismaClient();
 
 async function criarUsuario(email) {
   if (!validarFormatoEmail(email)) {

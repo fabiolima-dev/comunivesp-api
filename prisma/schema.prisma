@@ -16,4 +16,13 @@ model usuarios {
     email_verificado                  Boolean   @default(false)
     criado_em                         DateTime  @default(now())
     email_verificacao_token_expira_em DateTime?
+    ano_ingresso                      Int?
+    eixoId                            Int?      @db.Integer
+    eixo                              Eixo?     @relation(fields: [eixoId], references: [id])
+}
+
+model Eixo {
+    id       Int        @id @default(autoincrement())
+    nome     String     @unique
+    usuarios usuarios[]
 }
