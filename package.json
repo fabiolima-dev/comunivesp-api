@@ -20,7 +20,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "node --watch src/app.js",
-    "seed": "prisma db seed"
+    "seed": "prisma db seed",
+    "start": "node src/app.js",
   },
   "dependencies": {
     "@prisma/client": "^6.5.0",
