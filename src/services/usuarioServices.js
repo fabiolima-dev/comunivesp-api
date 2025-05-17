@@ -105,6 +105,8 @@ async function buscarUsuario(id) {
       nome: true,
       email: true,
       criado_em: true,
+      ano_ingresso: true,
+      eixoId: true,
     },
   });
 }

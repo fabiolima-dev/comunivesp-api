@@ -2,10 +2,14 @@ const { buscarUsuario } = require("../services/usuarioServices");
 const prisma = require("../lib/prisma");
 
 async function getUser(req, res) {
-  console.log("rodando");
   const userId = req.params.id;
 
-  const usuario = await buscarUsuario(userId);
+  const usuario = await prisma.usuarios.findUnique({
+    where: { id: userId },
+    include: {
+      eixo: true,
+    },
+  });
 
   if (!usuario) {
     throw new Error("Usuário não encontrado.");
@@ -16,6 +20,14 @@ async function getUser(req, res) {
     nome: usuario.nome,
     email: usuario.email,
     criadoEm: usuario.criado_em,
+    anoIngresso: usuario.ano_ingresso,
+    eixoId: usuario.eixoId,
+    eixo: usuario.eixo
+      ? {
+          id: usuario.eixo.id,
+          nome: usuario.eixo.nome,
+        }
+      : null,
   });
 }
 
@@ -64,10 +76,24 @@ async function atualizarUsuario(req, res) {
       eixoId: true,
       ano_ingresso: true,
       criado_em: true,
+      eixo: {
+        select: {
+          id: true,
+          nome: true,
+        },
+      },
     },
   });
 
-  return res.json(usuarioAtualizado);
+  return res.json({
+    ...usuarioAtualizado,
+    eixo: usuarioAtualizado.eixo
+      ? {
+          id: usuarioAtualizado.eixo.id,
+          nome: usuarioAtualizado.eixo.nome,
+        }
+      : null,
+  });
 }
 
 module.exports = { getUser, listarEixos, atualizarUsuario };

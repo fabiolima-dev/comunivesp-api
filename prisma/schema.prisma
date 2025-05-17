@@ -19,10 +19,41 @@ model usuarios {
     ano_ingresso                      Int?
     eixoId                            Int?      @db.Integer
     eixo                              Eixo?     @relation(fields: [eixoId], references: [id])
+    duvidas_aluno                     duvidas[] @relation("DuvidasAluno")
+    duvidas_professor                 duvidas[] @relation("DuvidasProfessor")
 }
 
 model Eixo {
     id       Int        @id @default(autoincrement())
     nome     String     @unique
     usuarios usuarios[]
+}
+
+model duvidas {
+    id          Int         @id @default(autoincrement())
+    titulo      String
+    descricao   String      @db.Text
+    status      Status      @default(ABERTA)
+    dataCriacao DateTime    @default(now())
+    aluno       usuarios    @relation("DuvidasAluno", fields: [alunoId], references: [id])
+    alunoId     String      @db.Uuid
+    professor   usuarios?   @relation("DuvidasProfessor", fields: [professorId], references: [id])
+    professorId String?     @db.Uuid
+    mensagens   mensagens[]
+}
+
+model mensagens {
+    id        Int      @id @default(autoincrement())
+    conteudo  String   @db.Text
+    dataEnvio DateTime @default(now())
+    duvida    duvidas  @relation(fields: [duvidaId], references: [id])
+    duvidaId  Int
+    autorId   String   @db.Uuid
+    autorNome String
+}
+
+enum Status {
+    ABERTA
+    FECHADA
+    RESOLVIDA
 }
