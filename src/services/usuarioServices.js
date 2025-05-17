@@ -57,7 +57,6 @@ async function verificarEmailToken(token) {
     where: { id: usuario.id },
     data: {
       email_verificado: true,
-      email_verificacao_token: null,
       email_verificacao_token_expira_em: null,
     },
   }));
