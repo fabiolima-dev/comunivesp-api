@@ -11,8 +11,10 @@ async function main() {
     ];
 
     for (const eixo of eixos) {
-      await prisma.Eixo.create({
-        data: eixo,
+      await prisma.Eixo.upsert({
+        where: { nome: eixo.nome },
+        update: {},
+        create: eixo,
       });
     }
 
